@@ -1,9 +1,10 @@
 const $arenas = document.body.querySelector('.arenas');
+const $randomButton = document.querySelector('.button');
 
 let player1 = {
     player: 1,
     name: 'SCORPION',
-    hp: 50,
+    hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
     weapon: ['rope', 'sword'],
     attack: function () {
@@ -14,7 +15,7 @@ let player1 = {
 let player2 = {
     player: 2,
     name: 'SUB-ZERO',
-    hp: 80,
+    hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
     weapon: ['bat', 'knife'],
     attack: function () {
@@ -30,23 +31,12 @@ function createElement(tag, className) {
     return $tag;
 }
 
-const createPlayer = function (player_obj) {
-
-    // const $player = document.createElement('div');
+function createPlayer (player_obj) {
     $player = createElement('div', 'player'+player_obj.player);
-    // const $progressbar = document.createElement('div');
     $progressbar = createElement('div', 'progressbar');
-
-    // const $character = document.createElement('div');
     $character = createElement('div', 'character');
-
-    // const $life = document.createElement('div');
     $life = createElement('div', 'life');
-
-    // const $name = document.createElement('div');
     $name = createElement('div', 'name');
-
-    // const $characterImg = document.createElement('img');
     $characterImg = createElement('img');
 
     $player.appendChild($progressbar);
@@ -55,14 +45,6 @@ const createPlayer = function (player_obj) {
     $progressbar.appendChild($name);
     $character.appendChild($characterImg);
 
-    // $arenas.appendChild($player);
-
-    // $player.classList.add(`${player_class}`)
-    // $progressbar.classList.add('progressbar')
-    // $character.classList.add('character')
-    // $life.classList.add('life')
-    // $name.classList.add('name')
-
     $life.style.width = `${player_obj.hp}%`;
     $name.innerText = `${player_obj.name}`;
     $characterImg.src = `${player_obj.img}`;
@@ -70,7 +52,51 @@ const createPlayer = function (player_obj) {
     return $player;
 };
 
+function randomNumber(min, max) {
+    let number = Math.round(Math.random() * max);
+    if (number < min) {
+        number = min;
+    }
+    return number;
+};
+
+function changeHP(player){
+    const $playerLife = document.querySelector(`.player${player.player} .life`);
+    player.hp -= randomNumber(1, 20);
+    $playerLife.style.width = player.hp + '%';
+
+    if (player.hp <= 0) {
+        player.hp = 0;
+        $playerLife.style.width = '0%';
+        // $arenas.appendChild(playerLose(player.name));
+        if (player.player === 1) {
+            $arenas.appendChild(playerWin(player2.name));
+        } else {
+            $arenas.appendChild(playerWin(player1.name));
+        }
+    }
+};
+
+// function playerLose(name) {
+//     const $loseTitle = createElement('div', 'loseTitle');
+//     $loseTitle.innerText = `${name} lose`;
+//     return $loseTitle;
+// }
+
+function playerWin(name) {
+    const $winTitle = createElement('div', 'loseTitle');
+    $winTitle.innerText = `${name} wins`;
+    $randomButton.disabled = true;
+
+    return $winTitle;
+}
+
+$randomButton.addEventListener('click', function(){
+    changeHP(player1);
+    changeHP(player2);
+})
+
 $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));
-// createPlayer('player1', player1);
-// createPlayer('player2', player2);
+
+// возможно стоит добавить title "dead heat" в случае одновременного проигрыша
