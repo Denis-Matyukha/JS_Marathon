@@ -68,7 +68,7 @@ function changeHP(player){
     if (player.hp <= 0) {
         player.hp = 0;
         $playerLife.style.width = '0%';
-        // $arenas.appendChild(playerLose(player.name));
+
         if (player.player === 1) {
             $arenas.appendChild(playerWin(player2.name));
         } else {
@@ -76,12 +76,6 @@ function changeHP(player){
         }
     }
 };
-
-// function playerLose(name) {
-//     const $loseTitle = createElement('div', 'loseTitle');
-//     $loseTitle.innerText = `${name} lose`;
-//     return $loseTitle;
-// }
 
 function playerWin(name) {
     const $winTitle = createElement('div', 'loseTitle');
@@ -98,5 +92,3 @@ $randomButton.addEventListener('click', function(){
 
 $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));
-
-// возможно стоит добавить title "dead heat" в случае одновременного проигрыша
