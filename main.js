@@ -31,8 +31,8 @@ function createElement(tag, className) {
     return $tag;
 }
 
-function createPlayer (player_obj) {
-    $player = createElement('div', 'player'+player_obj.player);
+function createPlayer(player_obj) {
+    $player = createElement('div', 'player' + player_obj.player);
     $progressbar = createElement('div', 'progressbar');
     $character = createElement('div', 'character');
     $life = createElement('div', 'life');
@@ -60,34 +60,52 @@ function randomNumber(min, max) {
     return number;
 };
 
-function changeHP(player){
+function changeHP(player) {
     const $playerLife = document.querySelector(`.player${player.player} .life`);
     player.hp -= randomNumber(1, 20);
-    $playerLife.style.width = player.hp + '%';
 
     if (player.hp <= 0) {
         player.hp = 0;
-        $playerLife.style.width = '0%';
 
-        if (player.player === 1) {
-            $arenas.appendChild(playerWin(player2.name));
-        } else {
-            $arenas.appendChild(playerWin(player1.name));
-        }
+        // if (player.player === 1) {
+        // $arenas.appendChild(playerWin(player2.name));
+        // } else {
+        // $arenas.appendChild(playerWin(player1.name));
+        // }
     }
+    $playerLife.style.width = player.hp + '%';
+    // $playerLife.style.width = '0%';
 };
 
 function playerWin(name) {
     const $winTitle = createElement('div', 'loseTitle');
-    $winTitle.innerText = `${name} wins`;
-    $randomButton.disabled = true;
+
+    if (name) {
+        $winTitle.innerText = `${name} wins`;
+    } else {
+        $winTitle.innerText = `draw`;
+    }
+
+    // $randomButton.disabled = true;
 
     return $winTitle;
 }
 
-$randomButton.addEventListener('click', function(){
+$randomButton.addEventListener('click', function () {
     changeHP(player1);
     changeHP(player2);
+
+    if (player1.hp === 0 || player2.hp === 0) {
+        $randomButton.disabled = true;
+    }
+
+    if (player1.hp === 0 && player1.hp < player2.hp) {
+        $arenas.appendChild(playerWin(player2.name));
+    } else if (player2.hp === 0 && player2.hp < player1.hp) {
+        $arenas.appendChild(playerWin(player1.name));
+    } else if (player2.hp === 0 && player1.hp === 0) {
+        $arenas.appendChild(playerWin());
+    }
 })
 
 $arenas.appendChild(createPlayer(player1));
