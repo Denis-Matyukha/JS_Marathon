@@ -95,6 +95,19 @@ function randomNumber(min, max) {
 // До встречи очень скоро...
 // 
 
+function createReloadButton() {
+    let $reloadWrap = createElement('div', 'reloadWrap');
+    let $reloadBtn = createElement('button', 'button');
+    $reloadBtn.innerText = 'Restart';
+    $reloadWrap.appendChild($reloadBtn);
+
+    $reloadBtn.addEventListener('click', function(){
+        window.location.reload();
+    })
+
+    return $reloadWrap;
+};
+
 function changeHP (min = 0, max = 0) {
     // const $playerLife = document.querySelector(`.player${player.player} .life`);
     this.hp -= randomNumber(min, max);
@@ -112,19 +125,7 @@ function elHP () {
 
 function renderHP () {
     elHP.call(this).style.width = this.hp + '%';
-    // elHP.call(this).style.width = this.hp - 20 + '%';
 };
-
-// function changeHP(player) {
-//     const $playerLife = document.querySelector(`.player${player.player} .life`);
-//     player.hp -= randomNumber(1, 20);
-
-//     if (player.hp <= 0) {
-//         player.hp = 0;
-//     }
-
-//     $playerLife.style.width = player.hp + '%';
-// };
 
 function playerWin(name) {
     const $winTitle = createElement('div', 'loseTitle');
@@ -135,14 +136,20 @@ function playerWin(name) {
         $winTitle.innerText = `draw`;
     }
 
+    $arenas.appendChild(createReloadButton());
+
     return $winTitle;
 }
 
 $randomButton.addEventListener('click', function () {
     // !!!
     // changeHP(player1);
+    player1.changeHP(0,20);
+    player1.renderHP();
     // !!!
     // changeHP(player2);
+    player2.changeHP(0,20);
+    player2.renderHP();
 
     if (player1.hp === 0 || player2.hp === 0) {
         $randomButton.disabled = true;
