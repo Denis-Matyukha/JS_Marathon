@@ -66,35 +66,6 @@ function randomNumber(min, max) {
     return number;
 };
 
-// 
-// Task #1
-// Создай три функции: changeHP, elHP и renderHP
-
-// 1. Функция changeHP должна в аргументах принимать, на какое кол-во надо изменять HP. 
-// И решать, нужно ли отнимать или ставить 0. Больше ничего эта функция не должна делать.
-// 2. Вторая функци elHP (это именно функция) должна возвращать document.querySelector, который должен ссылаться на внутреннее поле player, которое выводит 1 или 2. 
-// 3. Третья функци renderHP должна только рендерить hp, т.е. рисовать hp при помощи style.width.
-
-// Все эти функции должны быть созданы один раз и использоваться одноименных методах у обоих объектах.
-// Т.е. ссылайся в них через this на свойства и методы того объекта, в котором они используются.
-// 
-
-
-// 
-// ## Task #2 (*)
-// Давайте дальше тренироваться в создании дополнительных элементов.
-// Создайте функцию `createReloadButton` внутри это функции создайте div с классом *reloadWrap* и кнопку с классом *button*
-// Текст внутри кнопки напишите Restart.
-// не забудьте вложить эту кнопку в div.
-// Стили для этих элементов уже добавил.
-
-// Для начала повесть на кнопку событие click и в функции обратного вызова вызывай метод `window.location.reload()`
-// Вторым этапом, кнопка должна появляться только в том случае когда игра закончилась.
-
-//  Ну а на этом все.
-// До встречи очень скоро...
-// 
-
 function createReloadButton() {
     let $reloadWrap = createElement('div', 'reloadWrap');
     let $reloadBtn = createElement('button', 'button');
@@ -109,14 +80,11 @@ function createReloadButton() {
 };
 
 function changeHP (min = 0, max = 0) {
-    // const $playerLife = document.querySelector(`.player${player.player} .life`);
     this.hp -= randomNumber(min, max);
 
     if (this.hp <= 0) {
         this.hp = 0;
     }
-    console.log(this.hp);
-    // $playerLife.style.width = player.hp + '%';
 };
 
 function elHP () {
@@ -142,12 +110,10 @@ function playerWin(name) {
 }
 
 $randomButton.addEventListener('click', function () {
-    // !!!
-    // changeHP(player1);
+
     player1.changeHP(0,20);
     player1.renderHP();
-    // !!!
-    // changeHP(player2);
+
     player2.changeHP(0,20);
     player2.renderHP();
 
@@ -162,7 +128,7 @@ $randomButton.addEventListener('click', function () {
     } else if (player2.hp === 0 && player1.hp === 0) {
         $arenas.appendChild(playerWin());
     }
-})
+});
 
 $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));
