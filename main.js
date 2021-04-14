@@ -1,5 +1,4 @@
 const $arenas = document.body.querySelector('.arenas');
-// const $randomButton = document.querySelector('.button');
 
 const $formFight = document.querySelector('.control');
 
@@ -119,27 +118,6 @@ function playerWin(name) {
     return $winTitle;
 }
 
-// $randomButton.addEventListener('click', function () {
-
-//     player1.changeHP(0,20);
-//     player1.renderHP();
-
-//     player2.changeHP(0,20);
-//     player2.renderHP();
-
-//     if (player1.hp === 0 || player2.hp === 0) {
-//         $randomButton.disabled = true;
-//     }
-
-//     if (player1.hp === 0 && player1.hp < player2.hp) {
-//         $arenas.appendChild(playerWin(player2.name));
-//     } else if (player2.hp === 0 && player2.hp < player1.hp) {
-//         $arenas.appendChild(playerWin(player1.name));
-//     } else if (player2.hp === 0 && player1.hp === 0) {
-//         $arenas.appendChild(playerWin());
-//     }
-// });
-
 $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));
 
@@ -155,9 +133,9 @@ function enemyAttack() {
     }
 };
 
-const getDamage = function (action, counterAction) {
+const causedDamage = function (action, counterAction) {
     if (action !== counterAction) {
-        console.log(`WOW! - player${this.id} caused damage to ${this.value}`);
+        console.log(`Punch! - player${this.id} caused damage cost ${this.value} hp`);
 
         let victim = this.id === 1 ? player2 : player1;
 
@@ -186,22 +164,14 @@ const checkWinners = function () {
 
 $formFight.addEventListener('submit', function (e) {
     e.preventDefault();
-    // console.log('___001 - formFight');
-    // console.log($formFight);
-    console.log('___002 - formFight');
-    console.dir($formFight);
 
     const enemy = enemyAttack();
-    // console.log('___003 - enemy');
-    // console.log(enemy);
 
     const attack = {
         id: 1,
     };
 
     for (let item of $formFight) {
-        // console.log('___004 - item');
-        // console.dir(item);
 
         if (item.checked && item.name === 'hit') {
             attack.value = randomNumber(0, HIT[item.value]);
@@ -215,59 +185,9 @@ $formFight.addEventListener('submit', function (e) {
         item.checked = false;
     }
 
-    console.log('___005 - attack');
-    console.log(attack);
-    // {value: 16, hit: "body", defence: "body"}
-    console.log('___006 - enemy');
-    console.log(enemy);
-    // {value: 10, hit: "foot", defence: "head"}
+    causedDamage.call(attack, attack.hit, enemy.defence);
 
-    // !!!
-    // !!!!!!
-    // check result and render hp
-
-    // [v] делаем одну проверяющую функцию
-    // [v] проверяем если не совпали удар и защита игрока - рендерим урон на противнике
-
-    // if (attack.hit !== enemy.defence) {}
-    // if (enemy.hit !== attack.defence) {}
-
-    // [v] вынести функцию за пределы обработчика
-
-    getDamage.call(attack, attack.hit, enemy.defence);
-    getDamage.call(enemy, enemy.hit, attack.defence);
+    causedDamage.call(enemy, enemy.hit, attack.defence);
 
     checkWinners();
-
-    // [] проверяем если не совпали удар и защита компа - рендерим урон на игроке
-
-    // [] проверяем уровень жизней и выносим вердикт и рендерим кнопку рестарт и дисейблим либо всю форму, либо button
-
-    //     player1.changeHP(0,20);
-    //     player1.renderHP();
-
-    //     player2.changeHP(0,20);
-    //     player2.renderHP();
-
-    //     if (player1.hp === 0 || player2.hp === 0) {
-    //         $randomButton.disabled = true;
-    //     }
-
-    //     if (player1.hp === 0 && player1.hp < player2.hp) {
-    //         $arenas.appendChild(playerWin(player2.name));
-    //     } else if (player2.hp === 0 && player2.hp < player1.hp) {
-    //         $arenas.appendChild(playerWin(player1.name));
-    //     } else if (player2.hp === 0 && player1.hp === 0) {
-    //         $arenas.appendChild(playerWin());
-    //     }
 });
-
-/**
- Кроме того что повторишь код в уроке, тебе следует дописать **submit**
-
-Перенеси логику из бывшей кнопки *Random* в наш новый обработчик событий, проверь, кто из игроков не попал в защиту, и сделай соответсвующие действия.
-
-Не забывай про финальный вывод сообщения, кто победил, и конечно же, кнопки **Restart**.
-
-Подумай, какую часть кода можно вынести в какие-либо дополнительные функции, чтобы не повторяться.
- */
