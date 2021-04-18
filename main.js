@@ -1,9 +1,5 @@
-console.log('succsessful start');
-
 const $arenas = document.body.querySelector('.arenas');
-
 const $formFight = document.querySelector('.control');
-
 const $chat = document.querySelector('.chat');
 
 const HIT = {
@@ -44,7 +40,6 @@ const logs = {
         'Результат удара [playerWins]: [playerLose] - труп',
         '[playerLose] погиб от удара бойца [playerWins]',
         'Результат боя: [playerLose] - жертва, [playerWins] - убийца',
-        // elements indexes 0 - 2
     ],
     hit: [
         '[playerDefence] пытался сконцентрироваться, но [playerKick] разбежавшись раздробил копчиком левое ухо врага.',
@@ -65,7 +60,6 @@ const logs = {
         '[playerDefence] ковырялся в зубах, как вдруг, неожиданно [playerKick] отчаянно размозжил плечом мышцы пресса оппонента.',
         '[playerDefence] пришел в себя, и в это время [playerKick] провел разбивающий удар кистью руки, пробив блок, в голень противника.',
         '[playerDefence] пошатнулся, а в это время [playerKick] хихикая влепил грубый удар открытой ладонью по бедрам врага.',
-        // elements indexes 0 - 17
     ],
     defence: [
         '[playerKick] потерял момент и храбрый [playerDefence] отпрыгнул от удара открытой ладонью в ключицу.',
@@ -75,8 +69,7 @@ const logs = {
         '[playerKick] старался провести удар, но непобедимый [playerDefence] ушел в сторону от удара копчиком прямо в пятку.',
         '[playerKick] обманулся и жестокий [playerDefence] блокировал удар стопой в солнечное сплетение.',
         '[playerKick] не думал о бое, потому расстроенный [playerDefence] отпрыгнул от удара кулаком куда обычно не бьют.',
-        '[playerKick] обманулся и жестокий [playerDefence] блокировал удар стопой в солнечное сплетение.'
-        // elements indexes 0 - 8
+        '[playerKick] обманулся и жестокий [playerDefence] блокировал удар стопой в солнечное сплетение.',
     ],
     draw: 'Ничья - это тоже победа!'
 };
@@ -181,25 +174,15 @@ function enemyAttack() {
 };
 
 const causedDamage = function (action, counterAction) {
-    // call examples
-    // causedDamage.call(attack, attack.hit, enemy.defence);
-    // causedDamage.call(enemy, enemy.hit, attack.defence);
     let victim = this.id === 1 ? player2 : player1;
     let damager = this.id === 1 ? player1 : player2;
 
     if (action !== counterAction) {
-        // рабочий проверочный лог (1 из 2) ↓
-        // console.log(`Удар! - ${damager.name} нанёс урон на ${this.value} hp`);
-
         victim.changeHP(this.value, this.value);
         victim.renderHP();
-
-        // оставляем вывод 'hit' так как по логике игры может произойти только действие hit.
         generateLogs('hit', damager, victim, this.value);
 
     } else if (action === counterAction) {
-        // рабочий проверочный лог (2 из 2) ↓
-        // console.log(`Блок! - ${victim.name} отразил урон на ${this.value} hp`);
         generateLogs('defence', damager, victim);
     }
 };
@@ -222,7 +205,7 @@ const checkWinners = function () {
     } else if (player2.hp === 0 && player1.hp === 0) {
         $arenas.appendChild(playerWin());
         // draw
-        generateLogs('draw');        
+        generateLogs('draw');
     }
 
 };
@@ -245,14 +228,8 @@ function playerAttack() {
 
         item.checked = false;
     }
-    // console.log('###');
-    // console.log(attack);
-    // for (let item in attack) {
-    //     console.log(item);
-    // }
-    // console.log('###');
-    return attack;
 
+    return attack;
 };
 
 function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
@@ -260,9 +237,7 @@ function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
     let logIndex = 0;
     let currentTime = new Date;
 
-    // (minutes < 10 ? '0' : '') + minutes
     let splitHours = currentTime.getHours() < 10 ? '0' : '';
-
     let splitMinutes = currentTime.getMinutes() < 10 ? '0' : '';
 
     switch (type) {
@@ -277,8 +252,6 @@ function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
             text = logs['end'][logIndex]
                 .replace('[playerWins]', player1.name)
                 .replace('[playerLose]', player2.name);
-            // прописать логику
-            // console.log(text);
             break;
         case 'hit':
             logIndex = randomNumber(0, 17);
@@ -286,9 +259,9 @@ function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
                 ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
                 ${logs['hit'][logIndex]
                     .replace('[playerKick]', player1.name)
-                    .replace('[playerDefence]', player2.name)} —
-                #${damageLevel}#
-                ^[${player2.hp}/100]^
+                    .replace('[playerDefence]', player2.name)}
+                -${damageLevel}
+                 [${player2.hp}/100]
                     `;
             break;
         case 'defence':
@@ -297,8 +270,7 @@ function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
                 ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
                 ${logs['defence'][logIndex]
                     .replace('[playerKick]', player1.name)
-                    .replace('[playerDefence]', player2.name)} —
-                #${damageLevel}#
+                    .replace('[playerDefence]', player2.name)}
                     `;
             break;
         case 'draw':
@@ -306,24 +278,8 @@ function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
             break;
     }
 
-    // прописать генерируемые номера индексов в зависимости от типа:
-    // start: break or return
-    // end: elements indexes 0 - 2
-    // hit: elements indexes 0 - 17
-    // defence:  elements indexes 0 - 8
-    // draw: break or return
-    // let logIndex = 0;
-    // const text = logs[type][0].replace('[playerKick]',player1.name).replace('[playerDefence]',player2.name);
-    // const text = logs['start'][0].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
-    // console.log(`↓↓↓↓↓↓`);
-    // console.log(type);
-
-    // console.log(text);
-    // return text;
-
     const el = `<p>${text}</p>`;
-    // console.log(`el ↓`);
-    // console.log(el);
+
     $chat.insertAdjacentHTML('afterbegin', el);
 };
 
@@ -332,55 +288,11 @@ $formFight.addEventListener('submit', function (e) {
 
     const enemy = enemyAttack();
     const attack = playerAttack();
-    // const attack = {
-    //     id: 1,
-    // };
-
-    // for (let item of $formFight) {
-
-    //     if (item.checked && item.name === 'hit') {
-    //         attack.value = randomNumber(0, HIT[item.value]);
-    //         attack.hit = item.value;
-    //     }
-
-    //     if (item.checked && item.name === 'defence') {
-    //         attack.defence = item.value;
-    //     }
-
-    //     item.checked = false;
-    // }
 
     causedDamage.call(attack, attack.hit, enemy.defence);
-
     causedDamage.call(enemy, enemy.hit, attack.defence);
 
     checkWinners();
 });
 
 generateLogs('start', player1, player2);
-
-/*
- [v]
- Сделай вывод лога боя.
-
- [v]
- При старте игры первым делом инициализируй в лог боя строчку **start**.
-
- [v]
-Заметь, что там используется строчка *[time],* которую нужно заменить на время.
-
-[]
-Во время битвы нужно писать лог в формате:
-`[time] [text] [-player.hp] [hp/100]`
-
-[]
-Посмотри на видео, как выглядит формат лога.
-
-[]
-По окончании игры выведи один из элементов в `logs.end`
-
-[v]
-Для работы с выводом лога боя используй изученную конструкцию `switch...case`, которая будет в зависимости от type, который ты передаешь в функцию generateLogs, выводить нужную строчку.
-[v]
-Главная задача — научиться пользоваться этим методом.
- */
