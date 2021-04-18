@@ -195,7 +195,7 @@ const causedDamage = function (action, counterAction) {
         victim.renderHP();
 
         // оставляем вывод 'hit' так как по логике игры может произойти только действие hit.
-        generateLogs('hit', damager, victim);
+        generateLogs('hit', damager, victim, this.value);
 
     } else if (action === counterAction) {
         // рабочий проверочный лог (2 из 2) ↓
@@ -213,10 +213,16 @@ const checkWinners = function () {
 
     if (player1.hp === 0 && player1.hp < player2.hp) {
         $arenas.appendChild(playerWin(player2.name));
+        // player2 - winner
+        generateLogs('end', player2, player1);
     } else if (player2.hp === 0 && player2.hp < player1.hp) {
         $arenas.appendChild(playerWin(player1.name));
+        // player1 - winner
+        generateLogs('end', player1, player2);
     } else if (player2.hp === 0 && player1.hp === 0) {
         $arenas.appendChild(playerWin());
+        // draw
+        generateLogs('draw');        
     }
 
 };
@@ -249,32 +255,54 @@ function playerAttack() {
 
 };
 
-function generateLogs(type, player1, player2) {
+function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
     let text = '';
     let logIndex = 0;
+    let currentTime = new Date;
+
+    // (minutes < 10 ? '0' : '') + minutes
+    let splitHours = currentTime.getHours() < 10 ? '0' : '';
+
+    let splitMinutes = currentTime.getMinutes() < 10 ? '0' : '';
 
     switch (type) {
         case 'start':
-            text = logs['start'];
-            // console.log(text);
+            text = logs['start']
+                .replace('[time]', `${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()}`)
+                .replace('[player1]', player1.name)
+                .replace('[player2]', player2.name);
             break;
         case 'end':
+            logIndex = randomNumber(0, 2);
+            text = logs['end'][logIndex]
+                .replace('[playerWins]', player1.name)
+                .replace('[playerLose]', player2.name);
             // прописать логику
             // console.log(text);
             break;
         case 'hit':
             logIndex = randomNumber(0, 17);
-            text = logs['hit'][logIndex].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
-            // console.log(text);
+            text = `
+                ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
+                ${logs['hit'][logIndex]
+                    .replace('[playerKick]', player1.name)
+                    .replace('[playerDefence]', player2.name)} —
+                #${damageLevel}#
+                ^[${player2.hp}/100]^
+                    `;
             break;
         case 'defence':
             logIndex = randomNumber(0, 8);
-            text = logs['defence'][logIndex].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
-            // console.log(text);
+            text = `
+                ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
+                ${logs['defence'][logIndex]
+                    .replace('[playerKick]', player1.name)
+                    .replace('[playerDefence]', player2.name)} —
+                #${damageLevel}#
+                    `;
             break;
         case 'draw':
             text = logs['draw'];
-            // console.log(text);
             break;
     }
 
@@ -329,22 +357,30 @@ $formFight.addEventListener('submit', function (e) {
     checkWinners();
 });
 
+generateLogs('start', player1, player2);
+
 /*
+ [v]
  Сделай вывод лога боя.
 
+ [v]
  При старте игры первым делом инициализируй в лог боя строчку **start**.
 
+ [v]
 Заметь, что там используется строчка *[time],* которую нужно заменить на время.
 
+[]
 Во время битвы нужно писать лог в формате:
-
 `[time] [text] [-player.hp] [hp/100]`
 
+[]
 Посмотри на видео, как выглядит формат лога.
 
+[]
 По окончании игры выведи один из элементов в `logs.end`
 
+[v]
 Для работы с выводом лога боя используй изученную конструкцию `switch...case`, которая будет в зависимости от type, который ты передаешь в функцию generateLogs, выводить нужную строчку.
-
+[v]
 Главная задача — научиться пользоваться этим методом.
  */
