@@ -162,8 +162,8 @@ $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));
 
 function enemyAttack() {
-    const hit = ATTACK[randomNumber(0, 2)];
-    const defence = ATTACK[randomNumber(0, 2)];
+    const hit = ATTACK[randomNumber(0, ATTACK.length - 1)];
+    const defence = ATTACK[randomNumber(0, ATTACK.length - 1)];
 
     return {
         id: 2,
@@ -207,7 +207,6 @@ const checkWinners = function () {
         // draw
         generateLogs('draw');
     }
-
 };
 
 function playerAttack() {
@@ -248,13 +247,13 @@ function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
                 .replace('[player2]', player2.name);
             break;
         case 'end':
-            logIndex = randomNumber(0, 2);
+            logIndex = randomNumber(0, logs['end'].length - 1);
             text = logs['end'][logIndex]
                 .replace('[playerWins]', player1.name)
                 .replace('[playerLose]', player2.name);
             break;
         case 'hit':
-            logIndex = randomNumber(0, 17);
+            logIndex = randomNumber(0, logs['hit'].length - 1);
             text = `
                 ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
                 ${logs['hit'][logIndex]
@@ -265,7 +264,7 @@ function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
                     `;
             break;
         case 'defence':
-            logIndex = randomNumber(0, 8);
+            logIndex = randomNumber(0, logs['defence'].length - 1);
             text = `
                 ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
                 ${logs['defence'][logIndex]
@@ -275,6 +274,9 @@ function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
             break;
         case 'draw':
             text = logs['draw'];
+            break;
+        default:
+            text = 'Что-то происходит... Но что?...';
             break;
     }
 
