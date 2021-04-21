@@ -1,6 +1,6 @@
 const $arenas = document.body.querySelector('.arenas');
 const $formFight = document.querySelector('.control');
-const $chat = document.querySelector('.chat');
+const $chat = document.querySelector('.chat'); 
 
 const HIT = {
     head: 30,
@@ -10,7 +10,9 @@ const HIT = {
 
 const ATTACK = ['head', 'body', 'foot'];
 
-let player1 = {
+
+// Оставить , не импортировать
+const player1 = {
     player: 1,
     name: 'SCORPION',
     hp: 100,
@@ -22,7 +24,7 @@ let player1 = {
     renderHP,
 };
 
-let player2 = {
+const player2 = {
     player: 2,
     name: 'SUB-ZERO',
     hp: 100,
@@ -86,14 +88,6 @@ function attack() {
     return console.log(`${this.name} Fight...`);
 };
 
-// function createElement(tag, className) {
-//     const $tag = document.createElement(tag);
-//     if (className) {
-//         $tag.classList.add(className);
-//     }
-//     return $tag;
-// };
-
 const createElement = (tag, className) => {
     const $tag = document.createElement(tag);
     if (className) {
@@ -102,13 +96,13 @@ const createElement = (tag, className) => {
     return $tag;
 };
 
-const createPlayer = (player_obj) => {
-    $player = createElement('div', 'player' + player_obj.player);
-    $progressbar = createElement('div', 'progressbar');
-    $character = createElement('div', 'character');
-    $life = createElement('div', 'life');
-    $name = createElement('div', 'name');
-    $characterImg = createElement('img');
+const createPlayer = (playerObj) => {
+    let $player = createElement('div', 'player' + playerObj.player),
+        $progressbar = createElement('div', 'progressbar'),
+        $character = createElement('div', 'character'),
+        $life = createElement('div', 'life'),
+        $name = createElement('div', 'name'),
+        $characterImg = createElement('img');
 
     $player.appendChild($progressbar);
     $player.appendChild($character);
@@ -116,9 +110,9 @@ const createPlayer = (player_obj) => {
     $progressbar.appendChild($name);
     $character.appendChild($characterImg);
 
-    $life.style.width = `${player_obj.hp}%`;
-    $name.innerText = `${player_obj.name}`;
-    $characterImg.src = `${player_obj.img}`;
+    $life.style.width = `${playerObj.hp}%`;
+    $name.innerText = `${playerObj.name}`;
+    $characterImg.src = `${playerObj.img}`;
 
     return $player;
 };
@@ -205,15 +199,12 @@ const checkWinners = () => {
 
     if (player1.hp === 0 && player1.hp < player2.hp) {
         $arenas.appendChild(playerWin(player2.name));
-        // player2 - winner
         generateLogs('end', player2, player1);
     } else if (player2.hp === 0 && player2.hp < player1.hp) {
         $arenas.appendChild(playerWin(player1.name));
-        // player1 - winner
         generateLogs('end', player1, player2);
     } else if (player2.hp === 0 && player1.hp === 0) {
         $arenas.appendChild(playerWin());
-        // draw
         generateLogs('draw');
     }
 };
@@ -248,8 +239,6 @@ function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
     let splitHours = currentTime.getHours() < 10 ? '0' : '';
     let splitMinutes = currentTime.getMinutes() < 10 ? '0' : '';
 
-
-    // logs = заменены переменными из деструктуризации ↓
     switch (type) {
         case 'start':
             text = logStart
@@ -296,6 +285,7 @@ function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
     $chat.insertAdjacentHTML('afterbegin', el);
 };
 
+// Оставить , не импортировать
 $formFight.addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -310,6 +300,7 @@ $formFight.addEventListener('submit', function (e) {
 
 generateLogs('start', player1, player2);
 
+
 /**
 Для некоторых выходные выдались тяжелые из-за предыдущей домашней работы. Сегодня наводим порядок в приложении.
 У нас будет небольшое понедельничное задание.
@@ -323,7 +314,10 @@ generateLogs('start', player1, player2);
 []
 2. Наконец-то мы научились разделять файлы на модули, 
 пришло время разнести все функции по разным местам, 
-оставив в main.js только создание героев, лог старта и, конечно же, функцию submit.
+оставив в main.js только 
+- создание героев, 
+- лог старта и, конечно же, 
+- функцию submit.
 
 Я намеренно даю вам самим попробовать перенос функций в другие файлы, 
 чтобы вы поняли, какие методы к чему относятся, и где они зовутся. 
