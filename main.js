@@ -86,7 +86,15 @@ function attack() {
     return console.log(`${this.name} Fight...`);
 };
 
-function createElement(tag, className) {
+// function createElement(tag, className) {
+//     const $tag = document.createElement(tag);
+//     if (className) {
+//         $tag.classList.add(className);
+//     }
+//     return $tag;
+// };
+
+const createElement = (tag, className) => {
     const $tag = document.createElement(tag);
     if (className) {
         $tag.classList.add(className);
@@ -94,7 +102,7 @@ function createElement(tag, className) {
     return $tag;
 };
 
-function createPlayer(player_obj) {
+const createPlayer = (player_obj) => {
     $player = createElement('div', 'player' + player_obj.player);
     $progressbar = createElement('div', 'progressbar');
     $character = createElement('div', 'character');
@@ -115,17 +123,9 @@ function createPlayer(player_obj) {
     return $player;
 };
 
-// function randomNumber(min, max) {
-//     let number = Math.round(Math.random() * max);
-//     if (number < min) {
-//         number = min;
-//     }
-//     return number;
-// };
-
 const getRandom = (min, max) => Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + 1)) + Math.ceil(min);
 
-function createReloadButton() {
+const createReloadButton = () => {
     let $reloadWrap = createElement('div', 'reloadWrap');
     let $reloadBtn = createElement('button', 'button');
     $reloadBtn.innerText = 'Restart';
@@ -154,7 +154,7 @@ function renderHP() {
     elHP.call(this).style.width = this.hp + '%';
 };
 
-function playerWin(name) {
+const playerWin = (name) => {
     const $winTitle = createElement('div', 'loseTitle');
 
     if (name) {
@@ -164,14 +164,13 @@ function playerWin(name) {
     }
 
     $arenas.appendChild(createReloadButton());
-
     return $winTitle;
-}
+};
 
 $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));
 
-function enemyAttack() {
+const enemyAttack = () => {
     const hit = ATTACK[getRandom(0, ATTACK.length - 1)];
     const defence = ATTACK[getRandom(0, ATTACK.length - 1)];
 
@@ -197,7 +196,7 @@ const causedDamage = function (action, counterAction) {
     }
 };
 
-const checkWinners = function () {
+const checkWinners = () => {
     if (player1.hp === 0 || player2.hp === 0) {
         for (let item of $formFight) {
             item.disabled = 'true';
@@ -219,7 +218,7 @@ const checkWinners = function () {
     }
 };
 
-function playerAttack() {
+const playerAttack = () => {
     const attack = {
         id: 1,
     };
@@ -317,6 +316,9 @@ generateLogs('start', player1, player2);
 [v] 1. Воспользоваться деструктуризацией, 
 я видел в ваших ДЗ много мест, где деструктуризация сильно упростит жизнь. 
 Поэтому покажи навыки из сегодняшнего урока  и не стесняйся ее использовать!
+[v] 3. Также мы познакомились со стрелочной функцией. 
+Используй ее максимально. Но помни главное правило: у стрелочной функции нет контекста, 
+а значит она легко может потерять this, просто возьми это на заметку.
 
 []
 2. Наконец-то мы научились разделять файлы на модули, 
@@ -328,10 +330,7 @@ generateLogs('start', player1, player2);
 Ты сможешь использовать наверняка import и export. 
 Но не стоит экспортировать те функции, которые не должны применяться в других местах.
 
-[]
-3. Также мы познакомились со стрелочной функцией. 
-Используй ее максимально. Но помни главное правило: у стрелочной функции нет контекста, 
-а значит она легко может потерять this, просто возьми это на заметку.
+
 
 Ну а на этом все.
  */
