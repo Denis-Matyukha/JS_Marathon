@@ -74,7 +74,13 @@ const logs = {
     draw: 'Ничья - это тоже победа!'
 };
 
-// let [] = logs;
+const {
+    start: logStart,
+    end: logEnd,
+    hit: logHit,
+    defence: logDefence,
+    draw: logDraw
+} = logs;
 
 function attack() {
     return console.log(`${this.name} Fight...`);
@@ -241,24 +247,26 @@ function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
     let splitHours = currentTime.getHours() < 10 ? '0' : '';
     let splitMinutes = currentTime.getMinutes() < 10 ? '0' : '';
 
+
+    // logs = заменены переменными из деструктуризации ↓
     switch (type) {
         case 'start':
-            text = logs['start']
+            text = logStart
                 .replace('[time]', `${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()}`)
                 .replace('[player1]', player1.name)
                 .replace('[player2]', player2.name);
             break;
         case 'end':
-            logIndex = randomNumber(0, logs['end'].length - 1);
-            text = logs['end'][logIndex]
+            logIndex = randomNumber(0, logEnd.length - 1);
+            text = logEnd[logIndex]
                 .replace('[playerWins]', player1.name)
                 .replace('[playerLose]', player2.name);
             break;
         case 'hit':
-            logIndex = randomNumber(0, logs['hit'].length - 1);
+            logIndex = randomNumber(0, logHit.length - 1);
             text = `
                 ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
-                ${logs['hit'][logIndex]
+                ${logHit[logIndex]
                     .replace('[playerKick]', player1.name)
                     .replace('[playerDefence]', player2.name)}
                 -${damageLevel}
@@ -266,16 +274,16 @@ function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
                     `;
             break;
         case 'defence':
-            logIndex = randomNumber(0, logs['defence'].length - 1);
+            logIndex = randomNumber(0, logDefence.length - 1);
             text = `
                 ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
-                ${logs['defence'][logIndex]
+                ${logDefence[logIndex]
                     .replace('[playerKick]', player1.name)
                     .replace('[playerDefence]', player2.name)}
                     `;
             break;
         case 'draw':
-            text = logs['draw'];
+            text = logDraw;
             break;
         default:
             text = 'Что-то происходит... Но что?...';
