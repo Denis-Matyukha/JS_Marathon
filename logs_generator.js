@@ -1,6 +1,6 @@
 import {
     $chat
-} from './elements.js'
+} from './elements.js';
 
 import {
     logStart,

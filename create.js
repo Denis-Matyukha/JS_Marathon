@@ -1,7 +1,6 @@
-
 import {
-    $arenas,
-} from './elements.js'
+    $arenas
+} from './elements.js';
 
 const createElement = (tag, className) => {
         const $tag = document.createElement(tag);

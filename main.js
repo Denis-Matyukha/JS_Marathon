@@ -1,57 +1,11 @@
-import {
-    $arenas,
-    $formFight,
-} from './elements.js'
+import { $arenas, $formFight } from './elements.js'
+import { getRandom } from './randomiser.js';
+import { createPlayer } from './create.js'
+import { elHP, renderHP, causedDamage } from './damage.js';
+import { generateLogs } from './logs_generator.js';
+import { checkWinners } from './winner.js';
+import { enemyAttack, playerAttack } from './attack.js';
 
-
-import {
-    HIT,
-    ATTACK
-} from './hits.js';
-
-import {
-    getRandom
-} from './randomiser.js';
-
-import {
-    createPlayer,
-    createWinnerTitle
-} from './create.js'
-
-import {
-    elHP,
-    renderHP,
-    causedDamage
-} from './damage.js';
-
-import {
-    generateLogs
-} from './logs_generator.js'
-
-// const elHP = function() {
-//     return document.querySelector(`.player${this.player} .life`);
-// };
-
-// const renderHP = function() {
-//     elHP.call(this).style.width = this.hp + '%';
-// };
-
-// const causedDamage = function (action, counterAction) {
-//     let victim = this.id === 1 ? player2 : player1;
-//     let damager = this.id === 1 ? player1 : player2;
-
-//     if (action !== counterAction) {
-//         victim.changeHP(this.value, this.value);
-//         victim.renderHP();
-//         generateLogs('hit', damager, victim, this.value);
-
-//     } else if (action === counterAction) {
-//         generateLogs('defence', damager, victim);
-//     }
-// };
-
-
-// Оставить , не импортировать
 export const player1 = {
     player: 1,
     name: 'SCORPION',
@@ -136,157 +90,9 @@ function changeHP(min = 0, max = 0) {
     }
 };
 
-
-
-
-// const elHP = function() {
-//     return document.querySelector(`.player${this.player} .life`);
-// };
-
-// const renderHP = function() {
-//     elHP.call(this).style.width = this.hp + '%';
-// };
-
-// const causedDamage = function (action, counterAction) {
-//     let victim = this.id === 1 ? player2 : player1;
-//     let damager = this.id === 1 ? player1 : player2;
-
-//     if (action !== counterAction) {
-//         victim.changeHP(this.value, this.value);
-//         victim.renderHP();
-//         generateLogs('hit', damager, victim, this.value);
-
-//     } else if (action === counterAction) {
-//         generateLogs('defence', damager, victim);
-//     }
-// };
-
-
 $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));
 
-const enemyAttack = () => {
-    const hit = ATTACK[getRandom(0, ATTACK.length - 1)];
-    const defence = ATTACK[getRandom(0, ATTACK.length - 1)];
-
-    return {
-        id: 2,
-        value: getRandom(0, HIT[hit]),
-        hit,
-        defence,
-    }
-};
-
-// const causedDamage = function (action, counterAction) {
-//     let victim = this.id === 1 ? player2 : player1;
-//     let damager = this.id === 1 ? player1 : player2;
-
-//     if (action !== counterAction) {
-//         victim.changeHP(this.value, this.value);
-//         victim.renderHP();
-//         generateLogs('hit', damager, victim, this.value);
-
-//     } else if (action === counterAction) {
-//         generateLogs('defence', damager, victim);
-//     }
-// };
-
-const checkWinners = () => {
-    if (player1.hp === 0 || player2.hp === 0) {
-        for (let item of $formFight) {
-            item.disabled = 'true';
-        };
-    }
-
-    if (player1.hp === 0 && player1.hp < player2.hp) {
-        $arenas.appendChild(createWinnerTitle(player2.name));
-        generateLogs('end', player2, player1);
-    } else if (player2.hp === 0 && player2.hp < player1.hp) {
-        $arenas.appendChild(createWinnerTitle(player1.name));
-        generateLogs('end', player1, player2);
-    } else if (player2.hp === 0 && player1.hp === 0) {
-        $arenas.appendChild(createWinnerTitle());
-        generateLogs('draw');
-    }
-};
-
-const playerAttack = () => {
-    const attack = {
-        id: 1,
-    };
-
-    for (let item of $formFight) {
-
-        if (item.checked && item.name === 'hit') {
-            attack.value = getRandom(0, HIT[item.value]);
-            attack.hit = item.value;
-        }
-
-        if (item.checked && item.name === 'defence') {
-            attack.defence = item.value;
-        }
-
-        item.checked = false;
-    }
-
-    return attack;
-};
-
-// function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
-//     let text = '';
-//     let logIndex = 0;
-//     let currentTime = new Date;
-
-//     let splitHours = currentTime.getHours() < 10 ? '0' : '';
-//     let splitMinutes = currentTime.getMinutes() < 10 ? '0' : '';
-
-//     switch (type) {
-//         case 'start':
-//             text = logStart
-//                 .replace('[time]', `${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()}`)
-//                 .replace('[player1]', player1.name)
-//                 .replace('[player2]', player2.name);
-//             break;
-//         case 'end':
-//             logIndex = getRandom(0, logEnd.length - 1);
-//             text = logEnd[logIndex]
-//                 .replace('[playerWins]', player1.name)
-//                 .replace('[playerLose]', player2.name);
-//             break;
-//         case 'hit':
-//             logIndex = getRandom(0, logHit.length - 1);
-//             text = `
-//                 ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
-//                 ${logHit[logIndex]
-//                     .replace('[playerKick]', player1.name)
-//                     .replace('[playerDefence]', player2.name)}
-//                 -${damageLevel}
-//                  [${player2.hp}/100]
-//                     `;
-//             break;
-//         case 'defence':
-//             logIndex = getRandom(0, logDefence.length - 1);
-//             text = `
-//                 ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
-//                 ${logDefence[logIndex]
-//                     .replace('[playerKick]', player1.name)
-//                     .replace('[playerDefence]', player2.name)}
-//                     `;
-//             break;
-//         case 'draw':
-//             text = logDraw;
-//             break;
-//         default:
-//             text = 'Что-то происходит... Но что?...';
-//             break;
-//     }
-
-//     const el = `<p>${text}</p>`;
-
-//     $chat.insertAdjacentHTML('afterbegin', el);
-// };
-
-// Оставить , не импортировать
 $formFight.addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -300,32 +106,3 @@ $formFight.addEventListener('submit', function (e) {
 });
 
 generateLogs('start', player1, player2);
-
-
-/**
-Для некоторых выходные выдались тяжелые из-за предыдущей домашней работы. Сегодня наводим порядок в приложении.
-У нас будет небольшое понедельничное задание.
-[v] 1. Воспользоваться деструктуризацией, 
-я видел в ваших ДЗ много мест, где деструктуризация сильно упростит жизнь. 
-Поэтому покажи навыки из сегодняшнего урока  и не стесняйся ее использовать!
-[v] 3. Также мы познакомились со стрелочной функцией. 
-Используй ее максимально. Но помни главное правило: у стрелочной функции нет контекста, 
-а значит она легко может потерять this, просто возьми это на заметку.
-
-[]
-2. Наконец-то мы научились разделять файлы на модули, 
-пришло время разнести все функции по разным местам, 
-оставив в main.js только 
-- создание героев, 
-- лог старта и, конечно же, 
-- функцию submit.
-
-Я намеренно даю вам самим попробовать перенос функций в другие файлы, 
-чтобы вы поняли, какие методы к чему относятся, и где они зовутся. 
-Ты сможешь использовать наверняка import и export. 
-Но не стоит экспортировать те функции, которые не должны применяться в других местах.
-
-
-
-Ну а на этом все.
- */
