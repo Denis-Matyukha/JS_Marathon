@@ -1,10 +1,35 @@
-import { $arenas, $formFight } from './elements.js'
-import { getRandom } from './randomiser.js';
-import { createPlayer } from './create.js'
-import { elHP, renderHP, causedDamage } from './damage.js';
-import { generateLogs } from './logs_generator.js';
-import { checkWinners } from './winner.js';
-import { enemyAttack, playerAttack } from './attack.js';
+import {
+    $arenas,
+    $formFight
+} from './elements.js';
+
+import {
+    getRandom
+} from './randomiser.js';
+
+import {
+    createPlayer
+} from './create.js';
+
+import {
+    elHP,
+    renderHP,
+    causedDamage
+} from './damage.js';
+
+import {
+    generateLogs
+} from './logs_generator.js';
+
+import {
+    checkWinners
+} from './winner.js';
+
+import {
+    enemyAttack,
+    playerAttack
+} from './attack.js';
+
 
 export const player1 = {
     player: 1,
