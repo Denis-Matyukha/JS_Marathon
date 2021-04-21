@@ -1,11 +1,6 @@
-// const $arenas = document.body.querySelector('.arenas');
-// const $formFight = document.querySelector('.control');
-// const $chat = document.querySelector('.chat'); 
-
 import {
     $arenas,
     $formFight,
-    $chat
 } from './elements.js'
 
 
@@ -19,14 +14,45 @@ import {
 } from './randomiser.js';
 
 import {
-    createPlayer
+    createPlayer,
+    createWinnerTitle
 } from './create.js'
 
+import {
+    elHP,
+    renderHP,
+    causedDamage
+} from './damage.js';
 
+import {
+    generateLogs
+} from './logs_generator.js'
+
+// const elHP = function() {
+//     return document.querySelector(`.player${this.player} .life`);
+// };
+
+// const renderHP = function() {
+//     elHP.call(this).style.width = this.hp + '%';
+// };
+
+// const causedDamage = function (action, counterAction) {
+//     let victim = this.id === 1 ? player2 : player1;
+//     let damager = this.id === 1 ? player1 : player2;
+
+//     if (action !== counterAction) {
+//         victim.changeHP(this.value, this.value);
+//         victim.renderHP();
+//         generateLogs('hit', damager, victim, this.value);
+
+//     } else if (action === counterAction) {
+//         generateLogs('defence', damager, victim);
+//     }
+// };
 
 
 // Оставить , не импортировать
-const player1 = {
+export const player1 = {
     player: 1,
     name: 'SCORPION',
     hp: 100,
@@ -38,7 +64,7 @@ const player1 = {
     renderHP,
 };
 
-const player2 = {
+export const player2 = {
     player: 2,
     name: 'SUB-ZERO',
     hp: 100,
@@ -90,7 +116,7 @@ const logs = {
     draw: 'Ничья - это тоже победа!'
 };
 
-const {
+export const {
     start: logStart,
     end: logEnd,
     hit: logHit,
@@ -103,79 +129,38 @@ function attack() {
 };
 
 function changeHP(min = 0, max = 0) {
-        this.hp -= getRandom(min, max);
+    this.hp -= getRandom(min, max);
 
-        if (this.hp <= 0) {
-            this.hp = 0;
-        }
-    };
-
-    // const createElement = (tag, className) => {
-    //     const $tag = document.createElement(tag);
-    //     if (className) {
-    //         $tag.classList.add(className);
-    //     }
-    //     return $tag;
-    // };
-
-    // const createPlayer = (playerObj) => {
-    //     let $player = createElement('div', 'player' + playerObj.player),
-    //         $progressbar = createElement('div', 'progressbar'),
-    //         $character = createElement('div', 'character'),
-    //         $life = createElement('div', 'life'),
-    //         $name = createElement('div', 'name'),
-    //         $characterImg = createElement('img');
-
-    //     $player.appendChild($progressbar);
-    //     $player.appendChild($character);
-    //     $progressbar.appendChild($life);
-    //     $progressbar.appendChild($name);
-    //     $character.appendChild($characterImg);
-
-    //     $life.style.width = `${playerObj.hp}%`;
-    //     $name.innerText = `${playerObj.name}`;
-    //     $characterImg.src = `${playerObj.img}`;
-
-    //     return $player;
-    // };
-
-    // // const getRandom = (min, max) => Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + 1)) + Math.ceil(min);
-
-    // const createReloadButton = () => {
-    //     let $reloadWrap = createElement('div', 'reloadWrap');
-    //     let $reloadBtn = createElement('button', 'button');
-    //     $reloadBtn.innerText = 'Restart';
-    //     $reloadWrap.appendChild($reloadBtn);
-
-    //     $reloadBtn.addEventListener('click', function () {
-    //         window.location.reload();
-    //     })
-
-    //     return $reloadWrap;
-    // };
-
-
-
-function elHP() {
-    return document.querySelector(`.player${this.player} .life`);
+    if (this.hp <= 0) {
+        this.hp = 0;
+    }
 };
 
-function renderHP() {
-    elHP.call(this).style.width = this.hp + '%';
-};
 
-// const createWinnerTitle = (name) => {
-//     const $winTitle = createElement('div', 'loseTitle');
 
-//     if (name) {
-//         $winTitle.innerText = `${name} wins`;
-//     } else {
-//         $winTitle.innerText = `draw`;
-//     }
 
-//     $arenas.appendChild(createReloadButton());
-//     return $winTitle;
+// const elHP = function() {
+//     return document.querySelector(`.player${this.player} .life`);
 // };
+
+// const renderHP = function() {
+//     elHP.call(this).style.width = this.hp + '%';
+// };
+
+// const causedDamage = function (action, counterAction) {
+//     let victim = this.id === 1 ? player2 : player1;
+//     let damager = this.id === 1 ? player1 : player2;
+
+//     if (action !== counterAction) {
+//         victim.changeHP(this.value, this.value);
+//         victim.renderHP();
+//         generateLogs('hit', damager, victim, this.value);
+
+//     } else if (action === counterAction) {
+//         generateLogs('defence', damager, victim);
+//     }
+// };
+
 
 $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));
@@ -192,19 +177,19 @@ const enemyAttack = () => {
     }
 };
 
-const causedDamage = function (action, counterAction) {
-    let victim = this.id === 1 ? player2 : player1;
-    let damager = this.id === 1 ? player1 : player2;
+// const causedDamage = function (action, counterAction) {
+//     let victim = this.id === 1 ? player2 : player1;
+//     let damager = this.id === 1 ? player1 : player2;
 
-    if (action !== counterAction) {
-        victim.changeHP(this.value, this.value);
-        victim.renderHP();
-        generateLogs('hit', damager, victim, this.value);
+//     if (action !== counterAction) {
+//         victim.changeHP(this.value, this.value);
+//         victim.renderHP();
+//         generateLogs('hit', damager, victim, this.value);
 
-    } else if (action === counterAction) {
-        generateLogs('defence', damager, victim);
-    }
-};
+//     } else if (action === counterAction) {
+//         generateLogs('defence', damager, victim);
+//     }
+// };
 
 const checkWinners = () => {
     if (player1.hp === 0 || player2.hp === 0) {
@@ -247,59 +232,59 @@ const playerAttack = () => {
     return attack;
 };
 
-function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
-    let text = '';
-    let logIndex = 0;
-    let currentTime = new Date;
+// function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
+//     let text = '';
+//     let logIndex = 0;
+//     let currentTime = new Date;
 
-    let splitHours = currentTime.getHours() < 10 ? '0' : '';
-    let splitMinutes = currentTime.getMinutes() < 10 ? '0' : '';
+//     let splitHours = currentTime.getHours() < 10 ? '0' : '';
+//     let splitMinutes = currentTime.getMinutes() < 10 ? '0' : '';
 
-    switch (type) {
-        case 'start':
-            text = logStart
-                .replace('[time]', `${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()}`)
-                .replace('[player1]', player1.name)
-                .replace('[player2]', player2.name);
-            break;
-        case 'end':
-            logIndex = getRandom(0, logEnd.length - 1);
-            text = logEnd[logIndex]
-                .replace('[playerWins]', player1.name)
-                .replace('[playerLose]', player2.name);
-            break;
-        case 'hit':
-            logIndex = getRandom(0, logHit.length - 1);
-            text = `
-                ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
-                ${logHit[logIndex]
-                    .replace('[playerKick]', player1.name)
-                    .replace('[playerDefence]', player2.name)}
-                -${damageLevel}
-                 [${player2.hp}/100]
-                    `;
-            break;
-        case 'defence':
-            logIndex = getRandom(0, logDefence.length - 1);
-            text = `
-                ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
-                ${logDefence[logIndex]
-                    .replace('[playerKick]', player1.name)
-                    .replace('[playerDefence]', player2.name)}
-                    `;
-            break;
-        case 'draw':
-            text = logDraw;
-            break;
-        default:
-            text = 'Что-то происходит... Но что?...';
-            break;
-    }
+//     switch (type) {
+//         case 'start':
+//             text = logStart
+//                 .replace('[time]', `${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()}`)
+//                 .replace('[player1]', player1.name)
+//                 .replace('[player2]', player2.name);
+//             break;
+//         case 'end':
+//             logIndex = getRandom(0, logEnd.length - 1);
+//             text = logEnd[logIndex]
+//                 .replace('[playerWins]', player1.name)
+//                 .replace('[playerLose]', player2.name);
+//             break;
+//         case 'hit':
+//             logIndex = getRandom(0, logHit.length - 1);
+//             text = `
+//                 ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
+//                 ${logHit[logIndex]
+//                     .replace('[playerKick]', player1.name)
+//                     .replace('[playerDefence]', player2.name)}
+//                 -${damageLevel}
+//                  [${player2.hp}/100]
+//                     `;
+//             break;
+//         case 'defence':
+//             logIndex = getRandom(0, logDefence.length - 1);
+//             text = `
+//                 ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
+//                 ${logDefence[logIndex]
+//                     .replace('[playerKick]', player1.name)
+//                     .replace('[playerDefence]', player2.name)}
+//                     `;
+//             break;
+//         case 'draw':
+//             text = logDraw;
+//             break;
+//         default:
+//             text = 'Что-то происходит... Но что?...';
+//             break;
+//     }
 
-    const el = `<p>${text}</p>`;
+//     const el = `<p>${text}</p>`;
 
-    $chat.insertAdjacentHTML('afterbegin', el);
-};
+//     $chat.insertAdjacentHTML('afterbegin', el);
+// };
 
 // Оставить , не импортировать
 $formFight.addEventListener('submit', function (e) {
