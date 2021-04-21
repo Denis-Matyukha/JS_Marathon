@@ -115,13 +115,15 @@ function createPlayer(player_obj) {
     return $player;
 };
 
-function randomNumber(min, max) {
-    let number = Math.round(Math.random() * max);
-    if (number < min) {
-        number = min;
-    }
-    return number;
-};
+// function randomNumber(min, max) {
+//     let number = Math.round(Math.random() * max);
+//     if (number < min) {
+//         number = min;
+//     }
+//     return number;
+// };
+
+const getRandom = (min, max) => Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + 1)) + Math.ceil(min);
 
 function createReloadButton() {
     let $reloadWrap = createElement('div', 'reloadWrap');
@@ -137,7 +139,7 @@ function createReloadButton() {
 };
 
 function changeHP(min = 0, max = 0) {
-    this.hp -= randomNumber(min, max);
+    this.hp -= getRandom(min, max);
 
     if (this.hp <= 0) {
         this.hp = 0;
@@ -170,12 +172,12 @@ $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));
 
 function enemyAttack() {
-    const hit = ATTACK[randomNumber(0, ATTACK.length - 1)];
-    const defence = ATTACK[randomNumber(0, ATTACK.length - 1)];
+    const hit = ATTACK[getRandom(0, ATTACK.length - 1)];
+    const defence = ATTACK[getRandom(0, ATTACK.length - 1)];
 
     return {
         id: 2,
-        value: randomNumber(0, HIT[hit]),
+        value: getRandom(0, HIT[hit]),
         hit,
         defence,
     }
@@ -225,7 +227,7 @@ function playerAttack() {
     for (let item of $formFight) {
 
         if (item.checked && item.name === 'hit') {
-            attack.value = randomNumber(0, HIT[item.value]);
+            attack.value = getRandom(0, HIT[item.value]);
             attack.hit = item.value;
         }
 
@@ -257,13 +259,13 @@ function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
                 .replace('[player2]', player2.name);
             break;
         case 'end':
-            logIndex = randomNumber(0, logEnd.length - 1);
+            logIndex = getRandom(0, logEnd.length - 1);
             text = logEnd[logIndex]
                 .replace('[playerWins]', player1.name)
                 .replace('[playerLose]', player2.name);
             break;
         case 'hit':
-            logIndex = randomNumber(0, logHit.length - 1);
+            logIndex = getRandom(0, logHit.length - 1);
             text = `
                 ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
                 ${logHit[logIndex]
@@ -274,7 +276,7 @@ function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
                     `;
             break;
         case 'defence':
-            logIndex = randomNumber(0, logDefence.length - 1);
+            logIndex = getRandom(0, logDefence.length - 1);
             text = `
                 ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
                 ${logDefence[logIndex]
@@ -311,11 +313,8 @@ generateLogs('start', player1, player2);
 
 /**
 Для некоторых выходные выдались тяжелые из-за предыдущей домашней работы. Сегодня наводим порядок в приложении.
-
 У нас будет небольшое понедельничное задание.
-
-[]
-1. Воспользоваться деструктуризацией, 
+[v] 1. Воспользоваться деструктуризацией, 
 я видел в ваших ДЗ много мест, где деструктуризация сильно упростит жизнь. 
 Поэтому покажи навыки из сегодняшнего урока  и не стесняйся ее использовать!
 
