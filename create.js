@@ -8,9 +8,9 @@ const createElement = (tag, className) => {
             $tag.classList.add(className);
         }
         return $tag;
-    },
+    };
 
-    createReloadButton = () => {
+export const createReloadButton = () => {
         let $reloadWrap = createElement('div', 'reloadWrap');
         let $reloadBtn = createElement('button', 'button');
         $reloadBtn.innerText = 'Restart';
@@ -42,9 +42,9 @@ export const createPlayer = (playerObj) => {
         $characterImg.src = `${playerObj.img}`;
 
         return $player;
-    },
+    };
 
-    createWinnerTitle = (name) => {
+export const createWinnerTitle = (name) => {
         const $winTitle = createElement('div', 'loseTitle');
 
         if (name) {

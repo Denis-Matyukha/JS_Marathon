@@ -21,8 +21,9 @@ export const enemyAttack = () => {
             hit,
             defence,
         }
-    },
-    playerAttack = () => {
+    };
+
+export const playerAttack = () => {
         const attack = {
             id: 1,
         };

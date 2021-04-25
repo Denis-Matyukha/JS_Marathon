@@ -9,13 +9,13 @@ import {
 
 export const elHP = function () {
         return document.querySelector(`.player${this.player} .life`);
-    },
+    };
 
-    renderHP = function () {
+export const renderHP = function () {
         elHP.call(this).style.width = this.hp + '%';
-    },
+    };
 
-    causedDamage = function (action, counterAction) {
+export const causedDamage = function (action, counterAction) {
         let victim = this.id === 1 ? player2 : player1;
         let damager = this.id === 1 ? player1 : player2;
 

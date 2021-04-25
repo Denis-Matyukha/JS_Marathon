@@ -1,3 +1,3 @@
-export const $arenas = document.body.querySelector('.arenas'),
-    $formFight = document.querySelector('.control'),
-    $chat = document.querySelector('.chat');
+export const $arenas = document.body.querySelector('.arenas');
+export const $formFight = document.querySelector('.control');
+export const $chat = document.querySelector('.chat');
