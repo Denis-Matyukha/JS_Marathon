@@ -1,16 +1,37 @@
-const $arenas = document.body.querySelector('.arenas');
-const $formFight = document.querySelector('.control');
-const $chat = document.querySelector('.chat');
+import {
+    $arenas,
+    $formFight
+} from './elements.js';
 
-const HIT = {
-    head: 30,
-    body: 25,
-    foot: 20,
-};
+import {
+    getRandom
+} from './randomiser.js';
 
-const ATTACK = ['head', 'body', 'foot'];
+import {
+    createPlayer
+} from './create.js';
 
-let player1 = {
+import {
+    elHP,
+    renderHP,
+    causedDamage
+} from './damage.js';
+
+import {
+    generateLogs
+} from './logs_generator.js';
+
+import {
+    checkWinners
+} from './winner.js';
+
+import {
+    enemyAttack,
+    playerAttack
+} from './attack.js';
+
+
+export const player1 = {
     player: 1,
     name: 'SCORPION',
     hp: 100,
@@ -22,7 +43,7 @@ let player1 = {
     renderHP,
 };
 
-let player2 = {
+export const player2 = {
     player: 2,
     name: 'SUB-ZERO',
     hp: 100,
@@ -74,216 +95,28 @@ const logs = {
     draw: 'Ничья - это тоже победа!'
 };
 
+export const {
+    start: logStart,
+    end: logEnd,
+    hit: logHit,
+    defence: logDefence,
+    draw: logDraw
+} = logs;
+
 function attack() {
     return console.log(`${this.name} Fight...`);
 };
 
-function createElement(tag, className) {
-    const $tag = document.createElement(tag);
-    if (className) {
-        $tag.classList.add(className);
-    }
-    return $tag;
-};
-
-function createPlayer(player_obj) {
-    $player = createElement('div', 'player' + player_obj.player);
-    $progressbar = createElement('div', 'progressbar');
-    $character = createElement('div', 'character');
-    $life = createElement('div', 'life');
-    $name = createElement('div', 'name');
-    $characterImg = createElement('img');
-
-    $player.appendChild($progressbar);
-    $player.appendChild($character);
-    $progressbar.appendChild($life);
-    $progressbar.appendChild($name);
-    $character.appendChild($characterImg);
-
-    $life.style.width = `${player_obj.hp}%`;
-    $name.innerText = `${player_obj.name}`;
-    $characterImg.src = `${player_obj.img}`;
-
-    return $player;
-};
-
-function randomNumber(min, max) {
-    let number = Math.round(Math.random() * max);
-    if (number < min) {
-        number = min;
-    }
-    return number;
-};
-
-function createReloadButton() {
-    let $reloadWrap = createElement('div', 'reloadWrap');
-    let $reloadBtn = createElement('button', 'button');
-    $reloadBtn.innerText = 'Restart';
-    $reloadWrap.appendChild($reloadBtn);
-
-    $reloadBtn.addEventListener('click', function () {
-        window.location.reload();
-    })
-
-    return $reloadWrap;
-};
-
 function changeHP(min = 0, max = 0) {
-    this.hp -= randomNumber(min, max);
+    this.hp -= getRandom(min, max);
 
     if (this.hp <= 0) {
         this.hp = 0;
     }
 };
 
-function elHP() {
-    return document.querySelector(`.player${this.player} .life`);
-};
-
-function renderHP() {
-    elHP.call(this).style.width = this.hp + '%';
-};
-
-function playerWin(name) {
-    const $winTitle = createElement('div', 'loseTitle');
-
-    if (name) {
-        $winTitle.innerText = `${name} wins`;
-    } else {
-        $winTitle.innerText = `draw`;
-    }
-
-    $arenas.appendChild(createReloadButton());
-
-    return $winTitle;
-}
-
 $arenas.appendChild(createPlayer(player1));
 $arenas.appendChild(createPlayer(player2));
-
-function enemyAttack() {
-    const hit = ATTACK[randomNumber(0, ATTACK.length - 1)];
-    const defence = ATTACK[randomNumber(0, ATTACK.length - 1)];
-
-    return {
-        id: 2,
-        value: randomNumber(0, HIT[hit]),
-        hit,
-        defence,
-    }
-};
-
-const causedDamage = function (action, counterAction) {
-    let victim = this.id === 1 ? player2 : player1;
-    let damager = this.id === 1 ? player1 : player2;
-
-    if (action !== counterAction) {
-        victim.changeHP(this.value, this.value);
-        victim.renderHP();
-        generateLogs('hit', damager, victim, this.value);
-
-    } else if (action === counterAction) {
-        generateLogs('defence', damager, victim);
-    }
-};
-
-const checkWinners = function () {
-    if (player1.hp === 0 || player2.hp === 0) {
-        for (let item of $formFight) {
-            item.disabled = 'true';
-        };
-    }
-
-    if (player1.hp === 0 && player1.hp < player2.hp) {
-        $arenas.appendChild(playerWin(player2.name));
-        // player2 - winner
-        generateLogs('end', player2, player1);
-    } else if (player2.hp === 0 && player2.hp < player1.hp) {
-        $arenas.appendChild(playerWin(player1.name));
-        // player1 - winner
-        generateLogs('end', player1, player2);
-    } else if (player2.hp === 0 && player1.hp === 0) {
-        $arenas.appendChild(playerWin());
-        // draw
-        generateLogs('draw');
-    }
-};
-
-function playerAttack() {
-    const attack = {
-        id: 1,
-    };
-
-    for (let item of $formFight) {
-
-        if (item.checked && item.name === 'hit') {
-            attack.value = randomNumber(0, HIT[item.value]);
-            attack.hit = item.value;
-        }
-
-        if (item.checked && item.name === 'defence') {
-            attack.defence = item.value;
-        }
-
-        item.checked = false;
-    }
-
-    return attack;
-};
-
-function generateLogs(type, player1 = {}, player2 = {}, damageLevel = 0) {
-    let text = '';
-    let logIndex = 0;
-    let currentTime = new Date;
-
-    let splitHours = currentTime.getHours() < 10 ? '0' : '';
-    let splitMinutes = currentTime.getMinutes() < 10 ? '0' : '';
-
-    switch (type) {
-        case 'start':
-            text = logs['start']
-                .replace('[time]', `${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()}`)
-                .replace('[player1]', player1.name)
-                .replace('[player2]', player2.name);
-            break;
-        case 'end':
-            logIndex = randomNumber(0, logs['end'].length - 1);
-            text = logs['end'][logIndex]
-                .replace('[playerWins]', player1.name)
-                .replace('[playerLose]', player2.name);
-            break;
-        case 'hit':
-            logIndex = randomNumber(0, logs['hit'].length - 1);
-            text = `
-                ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
-                ${logs['hit'][logIndex]
-                    .replace('[playerKick]', player1.name)
-                    .replace('[playerDefence]', player2.name)}
-                -${damageLevel}
-                 [${player2.hp}/100]
-                    `;
-            break;
-        case 'defence':
-            logIndex = randomNumber(0, logs['defence'].length - 1);
-            text = `
-                ${splitHours}${currentTime.getHours()}:${splitMinutes}${currentTime.getMinutes()} — 
-                ${logs['defence'][logIndex]
-                    .replace('[playerKick]', player1.name)
-                    .replace('[playerDefence]', player2.name)}
-                    `;
-            break;
-        case 'draw':
-            text = logs['draw'];
-            break;
-        default:
-            text = 'Что-то происходит... Но что?...';
-            break;
-    }
-
-    const el = `<p>${text}</p>`;
-
-    $chat.insertAdjacentHTML('afterbegin', el);
-};
 
 $formFight.addEventListener('submit', function (e) {
     e.preventDefault();
