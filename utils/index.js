@@ -1,5 +1,5 @@
 import { $arenas, $formFight, $chat, LOGS, ATTACK, HIT } from '../constants/index.js';
-import {player1,player2} from '../main.js';
+import { Player } from './player.js';
 
 const {
     start: logStart,
@@ -9,9 +9,27 @@ const {
     draw: logDraw
 } = LOGS;
 
+export const player1 = new Player({
+    player: 1,
+    name: 'SCORPION',
+    hp: 100,
+    img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
+    weapon: ['rope', 'sword'],
+    rootSelector: 'arenas',
+});
+
+export const player2 = new Player({
+    player: 2,
+    name: 'SUB-ZERO',
+    hp: 100,
+    img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
+    weapon: ['cudgel', 'knife'],
+    rootSelector: 'arenas',
+});
+
 export const getRandom = (min, max) => Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + 1)) + Math.ceil(min);
 
-export const generateLogs = (type, {name: playerName1} = {}, {name: playerNmae2, hp: playerHp2} = {}, damageLevel = 0) => {
+export const generateLogs = (type, {name: playerName1 } = {}, { name: playerNmae2, hp: playerHp2} = {}, damageLevel = 0) => {
     let text = '';
     let logIndex = 0;
     let currentTime = new Date;
@@ -78,6 +96,7 @@ export const enemyAttack = () => {
     }
 };
 
+
 export const playerAttack = () => {
     const attack = {
         id: 1,
@@ -94,8 +113,7 @@ export const playerAttack = () => {
             attack.defence = item.value;
         }
 
-        // вернуть после завершения homework-8
-        // item.checked = false;
+        item.checked = false;
     }
 
     return attack;
@@ -109,6 +127,7 @@ export const createElement = (tag, className) => {
     }
     return $tag;
 };
+
 
 export const createReloadButton = () => {
     let $reloadWrap = createElement('div', 'reloadWrap');
@@ -151,6 +170,7 @@ export const causedDamage = function (action, counterAction) {
         generateLogs('defence', damager, victim);
     }
 };
+
 
 export const checkWinners = () => {
     if (player1.hp === 0 || player2.hp === 0) {

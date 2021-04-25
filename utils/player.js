@@ -1,6 +1,7 @@
-import {createElement, getRandom} from './utils/index.js';
+import { createElement, getRandom } from './index.js';
 
 export class Player {
+    
     constructor(props) {
         this.player = props.player;
         this.selector = `player${this.player}`;
