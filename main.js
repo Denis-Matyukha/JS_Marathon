@@ -124,8 +124,12 @@ $formFight.addEventListener('submit', function (e) {
     const enemy = enemyAttack();
     const attack = playerAttack();
 
+    // ↓ деструктуризацию здесь решил не применять, 
+    // ↓ так как в causedDamage() передается и сам объект enemy и затем объект attack
+    // ↓ а обратиться к ним самим, если их деструктуризировать - не получится.
     causedDamage.call(attack, attack.hit, enemy.defence);
     causedDamage.call(enemy, enemy.hit, attack.defence);
+
 
     checkWinners();
 });
