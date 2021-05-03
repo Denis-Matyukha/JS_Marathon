@@ -1,5 +1,5 @@
 import { $arenas, $formFight, $chat, LOGS, ATTACK, HIT } from '../constants/index.js';
-import { Player } from './player.js';
+import { player1, player2 } from './game.js';
 
 const {
     start: logStart,
@@ -9,25 +9,9 @@ const {
     draw: logDraw
 } = LOGS;
 
-export const player1 = new Player({
-    player: 1,
-    name: 'SCORPION',
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-    weapon: ['rope', 'sword'],
-    rootSelector: 'arenas',
-});
-
-export const player2 = new Player({
-    player: 2,
-    name: 'SUB-ZERO',
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-    weapon: ['cudgel', 'knife'],
-    rootSelector: 'arenas',
-});
 
 export const getRandom = (min, max) => Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + 1)) + Math.ceil(min);
+
 
 export const generateLogs = (type, {name: playerName1 } = {}, { name: playerNmae2, hp: playerHp2} = {}, damageLevel = 0) => {
     let text = '';
@@ -157,16 +141,17 @@ export const createWinnerTitle = (name) => {
 };
 
 
-export const causedDamage = function (action, counterAction) {
-    let victim = this.id === 1 ? player2 : player1;
-    let damager = this.id === 1 ? player1 : player2;
+export const causedDamage = function ({id, hit, value}, {defence}) {    
 
-    if (action !== counterAction) {
-        victim.changeHP(this.value, this.value);
+    let damager = id === 1 ? player1 : player2;
+    let victim = id === 1 ? player2 : player1;
+
+    if (hit !== defence) {
+        victim.changeHP(value, value);
         victim.renderHP();
-        generateLogs('hit', damager, victim, this.value);
+        generateLogs('hit', damager, victim, value);
 
-    } else if (action === counterAction) {
+    } else if (hit === defence) {
         generateLogs('defence', damager, victim);
     }
 };
