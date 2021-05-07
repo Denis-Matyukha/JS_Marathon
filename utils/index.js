@@ -178,3 +178,41 @@ export const checkWinners = () => {
         generateLogs('draw');
     }
 };
+
+
+
+
+/**
+ ## #3
+
+Для того что бы совершать бои вам нужно использовать *method* **POST**
+
+Для запроса используйте ссылку 
+http://reactmarathon-api.herokuapp.com/api/mk/player/fight
+
+
+Ваш `fetch` будет выглядеть следующим образом.
+
+fetch('http://reactmarathon-api.herokuapp.com/api/mk/player/fight', {
+    method: 'POST',
+    body: JSON.stringify({
+        hit,
+        defence,
+    })
+});
+
+
+В метод `JSON.stringify` вы должны передать объект с двумя полями, *hit* и *defence*
+
+Это куда ваш игрок собирается ударить, и что он будет защищать.
+
+В ответ вы получите объект такого типа:
+
+{
+    player1: {value: 20, hit: 'foot', defence: 'head'},
+    player2: {value: 19, hit: 'foot', defence: 'body'}
+}
+
+Где *player1* сколько нанес урона, что защищает и бьет. Тоже самое и для player2.
+
+ */

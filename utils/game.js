@@ -27,21 +27,15 @@ export class Game {
 
         const players = await this.getPlayers();
 
-        console.log(players);
+        // console.log(players);
 
         const getPlayer2 = async () => {
             if (localStorage.getItem('player2') === null) {
                 let p2 = await fetch('https://reactmarathon-api.herokuapp.com/api/mk/player/choose').then(res => res.json());
-                console.log(`alarm_0`);
-                console.log(p2);
                 localStorage.setItem('player2', JSON.stringify(p2));
                 return p2;
             } else {
                 let p2 = JSON.parse(localStorage.getItem('player2'));
-                console.log(`alarm_1`);
-                console.log(JSON.parse(localStorage.getItem('player2')));
-                console.log(localStorage);
-                console.log(p2);
                 return p2;
             };
         };
@@ -57,24 +51,102 @@ export class Game {
 
         player2 = new Player({
             ...p2,
-            // ...(await getPlayer2()),
             player: 2,
             rootSelector: 'arenas',
         });
-        // console.log(`player2`);
-        // console.log(player2);
 
         player1.createPlayer();
         player2.createPlayer();
 
-        $formFight.addEventListener('submit', function (e) {
+        $formFight.addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            const enemy = enemyAttack();
             const attack = playerAttack();
+            // console.log(`attack ↓`);
+            // console.log(attack);
+            
+            const enemy = enemyAttack();
+            // console.log(`enemy ↓`);
+            // console.log(enemy);
 
-            causedDamage(attack, enemy);
-            causedDamage(enemy, attack);
+            /*  initial values
+
+            attack ↓
+            {id: 1, value: 6, hit: "head", defence: "head"}
+
+            enemy ↓
+            {id: 2, value: 7, hit: "foot", defence: "foot"}
+
+            const {
+                start: logStart,
+                end: logEnd,
+                hit: logHit,
+                defence: logDefence,
+                draw: logDraw
+            } = LOGS;
+
+            */
+
+           const {id, value, hit, defence} = attack;
+
+           const q = await fetch('http://reactmarathon-api.herokuapp.com/api/mk/player/fight',{
+               method: 'POST',
+               body: JSON.stringify({
+                   hit,
+                    defence,
+               })
+            // });
+           }).then(res => res.json());
+           console.log(`q-Succsess↑↓`);
+           /*
+           {
+            player1: {value: 17, hit: "foot", defence: "foot"}
+            player2: {value: 4, hit: "head", defence: "body"}
+           }
+           */
+        //   q.then(res => console.log(res.json()));
+        console.log(q);
+
+        console.log(`### `);
+
+        console.log(q.player1);
+        console.log(q.player2);
+
+        console.log(`###2`);
+
+        q.player1 = {
+            id:1,
+            ...q.player1,
+        };
+
+        q.player2 = {
+            id:2,
+            ...q.player2,
+        };
+
+        const {player1, player2} = q;
+
+        /**
+         * 
+         *  attack ↓
+            {id: 1, value: 6, hit: "head", defence: "head"}
+            enemy ↓
+            {id: 2, value: 7, hit: "foot", defence: "foot"}
+            
+            {id: 1, value: 11, hit: "foot", defence: "foot"}
+            {id: 2, value: 9, hit: "body", defence: "foot"}
+         */
+
+        console.log(q.player1);
+        console.log(q.player2);
+
+
+            // task3
+            // causedDamage(attack, enemy);
+            // causedDamage(enemy, attack);
+
+            causedDamage(player1, player2);
+            causedDamage(player2, player1);
 
             checkWinners();
         });
@@ -83,3 +155,39 @@ export class Game {
     }
 
 };
+
+
+/**
+ ## #3
+
+Для того что бы совершать бои вам нужно использовать *method* **POST**
+
+Для запроса используйте ссылку 
+http://reactmarathon-api.herokuapp.com/api/mk/player/fight
+
+
+Ваш `fetch` будет выглядеть следующим образом.
+
+fetch('http://reactmarathon-api.herokuapp.com/api/mk/player/fight', {
+    method: 'POST',
+    body: JSON.stringify({
+        hit,
+        defence,
+    })
+});
+
+
+В метод `JSON.stringify` вы должны передать объект с двумя полями, *hit* и *defence*
+
+Это куда ваш игрок собирается ударить, и что он будет защищать.
+
+В ответ вы получите объект такого типа:
+
+{
+    player1: {value: 20, hit: 'foot', defence: 'head'},
+    player2: {value: 19, hit: 'foot', defence: 'body'}
+}
+
+Где *player1* сколько нанес урона, что защищает и бьет. Тоже самое и для player2.
+
+ */
