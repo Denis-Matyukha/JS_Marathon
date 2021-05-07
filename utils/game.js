@@ -1,33 +1,41 @@
 import {$formFight} from '../constants/index.js';
-import { causedDamage, checkWinners, generateLogs, enemyAttack, playerAttack } from './index.js';
+import { getRandom, causedDamage, checkWinners, generateLogs, enemyAttack, playerAttack } from './index.js';
 import { Player } from './player.js';
 
-
-export const player1 = new Player({
-    player: 1,
-    name: 'SCORPION',
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-    weapon: ['rope', 'sword'],
-    rootSelector: 'arenas',
-});
-
-
-export const player2 = new Player({
-    player: 2,
-    name: 'SUB-ZERO',
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-    weapon: ['cudgel', 'knife'],
-    rootSelector: 'arenas',
-});
+export let player1;
+export let player2;
 
 export class Game {
 
-    start = () => {
+    getPlayers = async () => {
+        const body = fetch('https://reactmarathon-api.herokuapp.com/api/mk/players').then(res => res.json());
+        return body;
+    }
+
+    start = async () => {
+
+        const players = await this.getPlayers();
+
+        console.log(players);
+
+        const p1 = players[getRandom(0, players.length - 1)];
+        const p2 = players[getRandom(0, players.length - 1)];
+
+        player1 = new Player({
+                ...p1,
+                player: 1,
+                rootSelector: 'arenas',
+        });
+
+        player2 = new Player({
+                ...p2,
+                player: 2,
+                rootSelector: 'arenas',
+        });
+
         player1.createPlayer();
         player2.createPlayer();
-        
+
         $formFight.addEventListener('submit', function (e) {
             e.preventDefault();
         
