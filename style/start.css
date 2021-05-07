@@ -1,0 +1,133 @@
+html,
+body{
+	font-size: 10px;
+}
+
+body{
+	background-color: #424542;
+	margin: 0;
+
+	font-family: 'Arial', sans-serif;
+	color: #efefef;
+
+	position: relative;
+	min-width: 320px;
+	overflow-x: hidden;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+p {
+	margin: 0;
+}
+
+@font-face {
+    font-family: 'Mortal Kombat 3';
+    src: url('../assets/fonts/MortalKombat3-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+.container{
+	width: 100%;
+	max-width: 1950px;
+	margin: 0 auto;
+
+}
+
+.intro{
+	height: 100vh;
+	background: url('../assets/background.png') no-repeat center;
+	background-size: cover;
+
+	position: relative;
+}
+
+.intro__link{
+	display: inline-block;
+	color: inherit;
+	text-decoration: none;
+
+	font-family: 'Mortal Kombat 3';
+	font-size: 40px;
+	padding: .5em 1em;
+	background-color: #f5d100;
+	border-radius: 10px;
+	box-shadow: 5px 5px #ff0036;
+
+	position: absolute;
+	left: 50%;
+	bottom: 5%;
+	z-index: 2;
+	
+	animation-name: moveButton;
+	animation-duration: 1.5s;
+	animation-timing-function: ease-in-out;
+	animation-fill-mode: forwards;
+}
+
+.intro__link:active{
+	left: calc(50% + 5px);
+	bottom: calc(5% - 5px);
+	box-shadow: none;
+}
+
+@keyframes moveButton{
+	from {
+		transform: translateX(500%);
+	}
+
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+.root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+   
+    width: 100%;
+    position: relative;
+    
+}
+
+.root--arenas{
+	background-color: #424466;
+	overflow: hidden;
+}
+
+
+@media(max-width: 1025px){
+	.intro__link{
+		font-size: 30px;
+	}
+}
+
+
+@media(max-width: 769px){
+	.intro{
+		background-size: contain;
+	}
+
+	.intro__link{
+		bottom: 25%;
+	}
+
+	.intro__link:active{
+		bottom: calc(25% - 5px);
+	}
+}
+
+@media(max-width: 426px){
+	.intro__link{
+		font-size: 20px;
+	}
+}

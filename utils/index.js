@@ -1,4 +1,4 @@
-import { $arenas, $formFight, $chat, LOGS, ATTACK, HIT } from '../constants/index.js';
+import { $arenas, $formFight, $chat, LOGS, ATTACK, HIT } from './constants.js';
 import { player1, player2 } from './game.js';
 
 const {
@@ -97,7 +97,7 @@ export const playerAttack = () => {
             attack.defence = item.value;
         }
 
-        item.checked = false;
+        // item.checked = false;
     }
 
     return attack;
@@ -120,7 +120,10 @@ export const createReloadButton = () => {
     $reloadWrap.appendChild($reloadBtn);
 
     $reloadBtn.addEventListener('click', function () {
-        window.location.reload();
+        // window.location.reload();
+        // localStorage.getItem('player2')
+        localStorage.removeItem('player2');
+        window.location.pathname = '../index.html';
     })
 
     return $reloadWrap;
