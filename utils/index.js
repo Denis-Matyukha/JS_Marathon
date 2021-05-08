@@ -1,5 +1,14 @@
-import { $arenas, $formFight, $chat, LOGS, ATTACK, HIT } from '../constants/index.js';
-import { player1, player2 } from './game.js';
+import {
+    $arenas,
+    $formFight,
+    $chat,
+    LOGS,
+    HIT
+} from './constants.js';
+import {
+    player1,
+    player2
+} from './game.js';
 
 const {
     start: logStart,
@@ -13,7 +22,12 @@ const {
 export const getRandom = (min, max) => Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + 1)) + Math.ceil(min);
 
 
-export const generateLogs = (type, {name: playerName1 } = {}, { name: playerNmae2, hp: playerHp2} = {}, damageLevel = 0) => {
+export const generateLogs = (type, {
+    name: playerName1
+} = {}, {
+    name: playerNmae2,
+    hp: playerHp2
+} = {}, damageLevel = 0) => {
     let text = '';
     let logIndex = 0;
     let currentTime = new Date;
@@ -67,20 +81,6 @@ export const generateLogs = (type, {name: playerName1 } = {}, { name: playerNmae
     $chat.insertAdjacentHTML('afterbegin', el);
 };
 
-
-export const enemyAttack = () => {
-    const hit = ATTACK[getRandom(0, ATTACK.length - 1)];
-    const defence = ATTACK[getRandom(0, ATTACK.length - 1)];
-
-    return {
-        id: 2,
-        value: getRandom(0, HIT[hit]),
-        hit,
-        defence,
-    }
-};
-
-
 export const playerAttack = () => {
     const attack = {
         id: 1,
@@ -98,7 +98,7 @@ export const playerAttack = () => {
         }
 
         item.checked = false;
-    }
+    };
 
     return attack;
 };
@@ -120,7 +120,8 @@ export const createReloadButton = () => {
     $reloadWrap.appendChild($reloadBtn);
 
     $reloadBtn.addEventListener('click', function () {
-        window.location.reload();
+        localStorage.removeItem('player2');
+        window.location.pathname = '../index.html';
     })
 
     return $reloadWrap;
@@ -141,7 +142,13 @@ export const createWinnerTitle = (name) => {
 };
 
 
-export const causedDamage = function ({id, hit, value}, {defence}) {    
+export const causedDamage = function ({
+    id,
+    hit,
+    value
+}, {
+    defence
+}) {
 
     let damager = id === 1 ? player1 : player2;
     let victim = id === 1 ? player2 : player1;
