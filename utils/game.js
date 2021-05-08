@@ -56,7 +56,7 @@ export class Game {
                 defence
             } = attack;
 
-            const q = await fetch('http://reactmarathon-api.herokuapp.com/api/mk/player/fight', {
+            const q = await fetch('https://reactmarathon-api.herokuapp.com/api/mk/player/fight', {
                 method: 'POST',
                 body: JSON.stringify({
                     hit,
